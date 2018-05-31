@@ -169,19 +169,30 @@ namespace ConfigHelper
       for (int j = 1; j < this.dataList.Count; j++)
       {
         T t = Activator.CreateInstance(typeof(T)) as T;
-        FieldInfo[] mis = typeof(T).GetFields();
+        FieldInfo[] fis = typeof(T).GetFields();
+        PropertyInfo[] pis = typeof(T).GetProperties();
         int i = 0;
         foreach (var item in this.dataList[0])
         {
-          List<FieldInfo> str = mis.Where(v => v.Name.ToLower() == item.ToLower()).ToList();
-          if (str == null || str.Count == 0)
+          List<PropertyInfo> piList = pis.Where(v => v.Name.ToLower() == item.ToLower()).ToList();
+          List<FieldInfo> fiList = fis.Where(v => v.Name.ToLower() == item.ToLower()).ToList();
+          if ((fiList == null || fiList.Count == 0) && (piList == null || piList.Count == 0))
           {
             Debug.LogError($"转换错误 ： 变量名出线异常 {item}");
             return null;
           }
           if (j > this.dataList.Count) j = this.dataList.Count;
-          object obj = Convert.ChangeType(this.dataList[j][i], str[0].FieldType);
-          str[0].SetValue(t, obj);
+          object obj = null;
+          if (fiList.Count > 0)
+          {
+            obj = Convert.ChangeType(this.dataList[j][i], fiList[0].FieldType);
+            fiList[0].SetValue(t, obj);
+          }
+          if (piList.Count > 0)
+          {
+            obj = Convert.ChangeType(this.dataList[j][i], piList[0].PropertyType);
+            piList[0].SetValue(t, obj);
+          }
           i++;
         }
         tmpList.Add(t);

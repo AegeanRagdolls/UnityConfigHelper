@@ -47,7 +47,7 @@ public class TestLoad : MonoBehaviour
     {
       foreach (var item in tmpList)
       {
-        Debug.Log($"{item.ID},{item.Name},{item.Level},{item.Agility},{item.Power},{item.Agility},{item.Stamina}");
+        Debug.Log($"{item.id},{item.name},{item.level},{item.attack},{item.power},{item.agility},{item.stamina}");
       }
     }
   }
