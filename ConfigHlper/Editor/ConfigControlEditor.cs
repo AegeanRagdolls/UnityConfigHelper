@@ -30,7 +30,6 @@ namespace ConfigHelper
       EditorGUILayout.Space();
       EditorGUILayout.Space();
 
-      cc.configMehtod = (SwitchConfigLoadMethod)EditorGUILayout.EnumPopup("加载方式 : ", this.cc.configMehtod);
 
       EditorGUILayout.Space();
       EditorGUILayout.Space();
@@ -48,25 +47,25 @@ namespace ConfigHelper
         {
           for (int i = 0; i < DragAndDrop.paths.Length; i++)
           {
-            ConfigFile configFile = new ConfigFile();
-            configFile.configFile = (TextAsset)DragAndDrop.objectReferences[i];
-            configFile.path = DragAndDrop.paths[i];
+            ConfigData configData = new ConfigData();
+            configData.configFile = (TextAsset)DragAndDrop.objectReferences[i];
+            configData.path = DragAndDrop.paths[i];
             int index = DragAndDrop.paths[i].LastIndexOf("/");
-            configFile.fileName = configFile.path.Substring(index + 1);
+            configData.fileName = configData.path.Substring(index + 1);
 
-            switch (configFile.fileName.ToLower().Substring(configFile.fileName.LastIndexOf('.') + 1))
+            switch (configData.fileName.ToLower().Substring(configData.fileName.LastIndexOf('.') + 1))
             {
               case "json":
-                configFile.configFileFormat = ConfigFileFormat.Json;
+                configData.configFileFormatType = ConfigFileFormatType.Json;
                 break;
               case "csv":
-                configFile.configFileFormat = ConfigFileFormat.CSV;
+                configData.configFileFormatType = ConfigFileFormatType.CSV;
                 break;
             }
-            ConfigFile[] tmp = this.cc.configsList.Where(v => v.configFile == configFile.configFile).ToArray();
+            ConfigData[] tmp = this.cc.configsList.Where(v => v.configFile == configData.configFile).ToArray();
             if (tmp.Length == 0)
             {
-              this.cc.configsList.Add(configFile);
+              this.cc.configsList.Add(configData);
             }
           }
 
